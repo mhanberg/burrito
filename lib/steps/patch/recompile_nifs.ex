@@ -78,7 +78,7 @@ defmodule Burrito.Steps.Patch.RecompileNIFs do
         cd: path,
         stderr_to_stdout: true,
         env:
-          [
+          dbg([
             {"MIX_APP_PATH", output_priv_dir},
             {"RANLIB", "zig ranlib"},
             {"AR", "zig ar"},
@@ -86,9 +86,11 @@ defmodule Burrito.Steps.Patch.RecompileNIFs do
              "zig cc -target #{cross_target} -O2 -dynamic -shared -Wl,-undefined=dynamic_lookup"},
             {"CXX",
              "zig c++ -target #{cross_target} -O2 -dynamic -shared -Wl,-undefined=dynamic_lookup"}
-          ] ++ erts_env,
+          ] ++ erts_env),
         into: IO.stream()
       )
+
+    dbg build_result
 
     case build_result do
       {_, 0} ->
