@@ -132,18 +132,21 @@ defmodule Burrito.Steps.Patch.RecompileNIFs do
       |> Path.expand()
       |> Path.wildcard()
       |> List.first()
+      |> dbg()
 
     ei_lib =
       Path.join(erts_path, ["otp*/", "usr/", "lib/"])
       |> Path.expand()
       |> Path.wildcard()
       |> List.first()
+      |> dbg()
 
     erts_include =
       Path.join(erts_path, ["otp*/", "erts*/", "include/"])
       |> Path.expand()
       |> Path.wildcard()
       |> List.first()
+      |> dbg()
 
     [
       {"ERL_EI_INCLUDE_DIR", ei_include},
