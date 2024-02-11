@@ -72,6 +72,9 @@ defmodule Burrito.Steps.Patch.RecompileNIFs do
         erts_make_env(erts_path)
       end
 
+    dbg erts_path
+    dbg erts_env
+
     # This currently is only designed for elixir_make NIFs
     build_result =
       System.cmd("make", ["all", "--always-make"],
