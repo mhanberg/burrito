@@ -175,12 +175,15 @@ fn get_base_install_dir() ![]const u8 {
         return "";
     };
 
+
     return app_dir;
 }
 
 fn get_install_dir(meta: *const MetaStruct) ![]u8 {
     // Combine the hash of the payload and a base dir to get a safe install directory
     const base_install_path = try get_base_install_dir();
+
+    logger.info("app dir `{s}`", .{base_install_path});
 
     // Parse the ERTS version and app version from the metadata JSON string
     const dir_name = try std.fmt.allocPrint(allocator, "{s}_erts-{s}_{s}", .{ build_options.RELEASE_NAME, meta.erts_version, meta.app_version });
