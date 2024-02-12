@@ -16,7 +16,7 @@ defmodule Burrito.Steps.Fetch.FetchMusl do
 
   @impl Step
   def execute(
-        %Context{target: %Target{os: :linux, cpu: arch, erts_source: {:precompiled, _}} = _target} =
+        %Context{target: %Target{os: :linux, cpu: arch, erts_source: _} = _target} =
           context
       ) do
     Log.info(:step, "Fetching musl libc runtime binary for Linux...")
