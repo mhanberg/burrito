@@ -119,6 +119,8 @@ defmodule Burrito.Builder do
         build: options[:phases][:build] || @phases[:build]
       ]
 
+      dbg phases
+
       Enum.reduce(phases, initial_context, &run_phase/2)
     end)
 
