@@ -16,7 +16,7 @@ defmodule Burrito.Steps.Fetch.FetchMusl do
 
   @impl Step
   def execute(
-        %Context{target: %Target{os: :linux, cpu: arch, erts_source: _} = _target} =
+        %Context{target: %Target{os: :linux, cpu: arch, erts_source: {:precompiled, _}} = _target} =
           context
       ) do
     Log.info(:step, "Fetching musl libc runtime binary for Linux...")
@@ -33,6 +33,30 @@ defmodule Burrito.Steps.Fetch.FetchMusl do
         _ ->
           do_download(so_url, cache_key)
       end
+
+    out_path = Path.join([context.self_dir, "src", "musl-runtime.so"])
+    File.write!(out_path, so_bytes)
+
+    Log.success(:step, "Wrote musl runtime file: #{out_path}")
+
+    %Context{
+      context
+      | extra_build_env:
+          context.extra_build_env ++
+            [{"__BURRITO_MUSL_RUNTIME_PATH", "/tmp/libc-musl-#{get_runtime_hash(arch)}.so"}]
+    }
+  end
+
+  def execute(
+        %Context{target: %Target{os: :linux, cpu: arch, erts_source: _} = _target} =
+          context
+      ) do
+    Log.info(:step, "Fetching musl libc runtime binary for Linux...")
+
+    so_url = fetch_musl_runtime(arch) |> to_string()
+    cache_key = :crypto.hash(:sha, so_url) |> Base.encode16()
+
+    so_bytes = File.read!("/tmp/libc-musl-17613ec13d9aa9e5e907e6750785c5bbed3ad49472ec12281f592e2f0f2d3dbd.so")
 
     out_path = Path.join([context.self_dir, "src", "musl-runtime.so"])
     File.write!(out_path, so_bytes)
